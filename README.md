@@ -98,3 +98,24 @@ Vor Einsatz manuell prüfen: alle vier Lernschritte durchlaufen; falsche Antwort
 Zehn Situationsfragen mit jeweils drei plausiblen Handlungsalternativen und Rückmeldung zur gewählten Antwort. Die Position der richtigen Antwort ist verteilt. Auswahl und Auswertung sind getrennte Schritte. Eine falsche Lernentscheidung kann nach dem Lesen der Erklärung fortgesetzt werden; im Wissenstest bleibt das erste Ergebnis gewertet. Die Bildübung verwendet ein echtes Foto und fragt nach Maßnahmen bei Tür und Matte. Sie behauptet keine aus dem Foto nicht nachweisbaren Defekte.
 
 Vier Fotoansichten aus drei Originalfotografien, lokal in `public/images/` (kein Hotlinking). Urheber, Originalquellen, Änderungen und Lizenzen stehen in `public/images/CREDITS.md` und in der App unter Informationen & Quellen. Die Bilder stammen nicht von einer generativen KI.
+
+## Überarbeitung: kompakte Navigation und bauartabhängiger Leitercheck
+
+Die Oberfläche verwendet eine feste untere Navigation mit Start, Lernen, Praxis, Check und Test. Informationen und Quellen sind oben erreichbar. Die helle Farbwelt nutzt Weiß, Blau und einen kleinen warmen Akzent; Sicherheitsrückmeldungen behalten eigene Farben und verständliche Texte. Startseite und Praxisübersicht sind kompakter; Quizfotos lassen sich bei Bedarf öffnen. Alle bisherigen Fotos, Fragen, Erklärungen und Praxisaufgaben bleiben enthalten.
+
+`src/inspection.ts` stellt die Prüfpunkte und die Zustandslogik bereit. `src/Inspection.tsx` führt durch die Auswahl und die Kontrolle; `src/LadderDiagram.tsx` zeigt schematische Bauteilbereiche. Unterstützt werden zunächst die einteilige Anlegeleiter, Stehleiter mit Plattform oder beidseitig begehbar ohne Plattform sowie starre und klappbare Tritte. Der Werkstoff wird separat abgefragt. Diese allgemeinen Profile sind Lernhilfen und kein herstellerbezogenes Prüfverfahren. Vor betrieblichem Einsatz sind sie fachkundig gegen die tatsächlich verwendeten Modelle, Anleitungen und betrieblichen Vorgaben zu prüfen.
+
+Nicht sicher erkannte Ausführungen und Werkstoffe führen zur Klärung. Mehrzweck-, Schiebe-, Gelenk-, Teleskop- und Podestleitern sowie Sonderausstattungen wie Rollen und verstellbare Füße sind noch nicht abgedeckt. Eine erforderliche fehlende Sicherung darf nicht als „nicht vorhanden / entfällt“ übersprungen werden. Die Zeichnungen sind vereinfachte Orientierungshilfen, keine Aufbauanleitungen; vorhandene Modellunterschiede sind zu beachten.
+
+Eine neue Auswahl verwirft alle Antworten. Mangel oder Unsicherheit stoppen den Ablauf. Ein positiver Abschluss ist keine Einsatzfreigabe und kein wiederkehrender Prüfnachweis. Check-Ergebnisse werden nicht gespeichert. Bestehende Lernfortschritte bleiben unter `leitersafe-v1` erhalten.
+
+Grundlagen der neuen Prüfführung:
+
+- [DGUV-Kontrollblatt, offizielle Wiedergabe bei der BG BAU](https://www.bgbau-medien.de/handlungshilfen_gb/daten/dguv/208_016/anh.htm)
+- [DGUV 208-016, Abschnitt 6: Prüfung und Instandhaltung](https://www.bgbau-medien.de/handlungshilfen_gb/daten/dguv/208_016/6.htm)
+- [TRBS 2121 Teil 2, Abschnitt 5: Prüfung](https://www.bgbau-medien.de/handlungshilfen_gb/daten/TR/trbs2121_2/5.htm)
+- [KRAUSE-Kontrollblatt für Leitern und Tritte](https://www.krause-systems.de/fileadmin/user_upload/Service/Downloads/Kontrollblaetter/Kontrollblatt_Leitern_Tritte.pdf)
+
+Die Prüfintervalle einer wiederkehrenden Prüfung sind betrieblich festzulegen und werden durch diesen Benutzercheck nicht bestimmt.
+
+`tests/inspection.test.mjs` prüft die Zuordnung der Bauteile, den Stopp bei Mangel/Unsicherheit an jedem Prüfpunkt, ungültige Ausführungen, vollständige Durchläufe und das Verwerfen alter Antworten. Browserprüfung der neuen Oberfläche steht noch aus: Der verwaltete Vorschau-Relay konnte den lokalen Port nicht bereitstellen. Insbesondere Darstellung bei 320/375 px, große Schrift, Fokusführung und Touchbedienung müssen noch im Browser verifiziert werden.

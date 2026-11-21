@@ -337,7 +337,7 @@ export const practices = [
   {
     title: "Gefährliche Aufstellungen erkennen",
     description: "Ein guter Stand macht den Unterschied.",
-    scene: 2,
+    scene: 5,
     steps: [
       "Betrachte einen möglichen Aufstellort vom Boden.",
       "Suche lose Unterlagen, Unebenheiten und rutschige Stellen.",
@@ -348,7 +348,7 @@ export const practices = [
   {
     title: "Die Umgebung kontrollieren",
     description: "Sicherheit beginnt um dich herum.",
-    scene: 4,
+    scene: 5,
     steps: [
       "Sieh dich vom Boden aus um.",
       "Achte auf Fahrwege, Türen und elektrische Gefahren.",

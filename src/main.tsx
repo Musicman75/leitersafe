@@ -12,20 +12,15 @@ import {
   ChevronRight,
   ChevronLeft,
   Clock,
-  LockKeyhole,
   TriangleAlert,
-  X,
-  Menu,
   RotateCcw,
   Lightbulb,
   Flag,
   CheckCircle2,
-  HardHat,
 } from "lucide-react";
 import {
   lessons,
   questions,
-  checkItems,
   practices,
   sources,
   photoExercise,
@@ -33,15 +28,15 @@ import {
 } from "./content";
 import { LadderPhoto, PhotoCredits } from "./LadderPhoto";
 import { readProgress, emptyProgress } from "./progress";
-import { getCheckState } from "./check";
+import { Inspection } from "./Inspection";
 import "./style.css";
 type Page = "start" | "schulung" | "praxis" | "check" | "quiz" | "info";
 const navigation = [
-  { id: "start", label: "Startseite", icon: Home },
-  { id: "schulung", label: "Schulung", icon: BookOpen },
-  { id: "praxis", label: "Praxisübungen", icon: Footprints },
-  { id: "check", label: "Sicherheitscheck", icon: ClipboardCheck },
-  { id: "quiz", label: "Wissenstest", icon: GraduationCap },
+  { id: "start", label: "Start", icon: Home },
+  { id: "schulung", label: "Lernen", icon: BookOpen },
+  { id: "praxis", label: "Praxis", icon: Footprints },
+  { id: "check", label: "Check", icon: ClipboardCheck },
+  { id: "quiz", label: "Test", icon: GraduationCap },
 ] as const;
 function QuestionCard({
   q,
@@ -125,15 +120,14 @@ function App() {
   });
   const [progress, setProgress] = useState(readProgress);
   const [storageError, setStorageError] = useState(false);
-  const [mobile, setMobile] = useState(false);
   const [lesson, setLesson] = useState<number | null>(null);
   const [step, setStep] = useState(0);
   const [lessonAnswered, setLessonAnswered] = useState(false);
+  const [lessonChoice, setLessonChoice] = useState<number | undefined>();
   const [practice, setPractice] = useState<number | null>(null);
   const [practiceSteps, setPracticeSteps] = useState<number[]>([]);
   const [photoCorrect, setPhotoCorrect] = useState(false);
   const [photoAttempt, setPhotoAttempt] = useState(0);
-  const [checkAnswers, setCheckAnswers] = useState<number[]>([]);
   const [quizIndex, setQuizIndex] = useState(0);
   const [quizAnswers, setQuizAnswers] = useState<number[]>([]);
   const [resetConfirm, setResetConfirm] = useState(false);
@@ -157,13 +151,11 @@ function App() {
   function go(p: Page) {
     setPage(p);
     location.hash = p;
-    setMobile(false);
-    setLesson(null);
-    setPractice(null);
     window.scrollTo(0, 0);
   }
   function openLesson(i: number) {
     setLesson(i);
+    setLessonChoice(undefined);
     setStep(0);
     setLessonAnswered(false);
     window.scrollTo(0, 0);
@@ -221,76 +213,35 @@ function App() {
       <a className="skip-link" href="#main">
         Zum Inhalt
       </a>
-      <aside className={mobile ? "sidebar open" : "sidebar"}>
-        <a className="brand" href="#start" onClick={() => go("start")}>
-          <span className="brand-mark">
-            <span />
-            <span />
-            <span />
-          </span>
-          <span>
-            Leiter<span className="brand-safe">Safe</span>
-            <small>SICHERHEIT, STUFE FÜR STUFE.</small>
-          </span>
-        </a>
-        <div className="nav-caption">DEIN LERNBEREICH</div>
-        <nav aria-label="Hauptnavigation">
-          {navigation.map((n) => (
-            <button
-              key={n.id}
-              className={page === n.id ? "active" : ""}
-              aria-current={page === n.id ? "page" : undefined}
-              onClick={() => go(n.id)}
-            >
-              <n.icon size={20} />
-              {n.label}
-              {page === n.id && <span className="nav-dot" />}
-            </button>
-          ))}
-        </nav>
-        <div className="sidebar-bottom">
-          <div className="sidebar-tip">
-            <ShieldCheck size={24} />
-            <strong>Deine Sicherheit zählt.</strong>
-            <p>Ein kurzer Check kann einen großen Unterschied machen.</p>
-          </div>
+      <nav className="bottom-nav" aria-label="Hauptnavigation">
+        {navigation.map((n) => (
           <button
-            className={page === "info" ? "info-link selected" : "info-link"}
-            onClick={() => go("info")}
+            key={n.id}
+            aria-current={page === n.id ? "page" : undefined}
+            onClick={() => go(n.id)}
           >
-            <Info size={18} />
-            Informationen & Quellen
+            <n.icon size={22} />
+            <span>{n.label}</span>
           </button>
-          <div className="local-note">
-            <LockKeyhole size={13} />
-            Dein Fortschritt bleibt bei dir.
-          </div>
-        </div>
-      </aside>
-      {mobile && (
-        <button
-          className="scrim"
-          aria-label="Menü schließen"
-          onClick={() => setMobile(false)}
-        />
-      )}
+        ))}
+      </nav>
       <div className="app-shell">
         <header className="topbar">
-          <button
-            className="menu-button"
-            onClick={() => setMobile(!mobile)}
-            aria-label="Navigation öffnen"
-            aria-expanded={mobile}
+          <a
+            className="compact-brand"
+            href="#start"
+            onClick={() => go("start")}
           >
-            <Menu />
+            Leiter<span>Safe</span>
+          </a>
+          <button
+            className="header-info"
+            aria-label="Informationen und Quellen"
+            aria-current={page === "info" ? "page" : undefined}
+            onClick={() => go("info")}
+          >
+            <Info size={22} />
           </button>
-          <span>Sicher arbeiten mit Leitern und Tritten</span>
-          <div className="topbar-right">
-            <span className="prototype">Lern-App</span>
-            <span className="profile">
-              <HardHat size={20} />
-            </span>
-          </div>
         </header>
         <main id="main" tabIndex={-1}>
           {storageError && (
@@ -301,76 +252,34 @@ function App() {
           )}
           {page === "start" && (
             <>
-              <div className="welcome-line">
+              <div className="page-heading home-heading">
+                <span className="eyebrow">Dein Lernbereich</span>
+                <h1>
+                  Sicher arbeiten.
+                  <br />
+                  Schritt für Schritt.
+                </h1>
+              </div>
+              <section className="continue-card">
                 <span className="eyebrow">
-                  <span className="small-line" /> WILLKOMMEN BEI LEITERSAFE
+                  {pct === 100 ? "Wissen auffrischen" : "Deine nächste Einheit"}
                 </span>
-                <span className="desktop-only">
-                  Einfach lernen. Sicher handeln.
-                </span>
-              </div>
-              <section className="hero">
-                <div className="hero-copy">
-                  <span className="pill">
-                    <ShieldCheck size={15} />
-                    MEHR SICHERHEIT IM ARBEITSALLTAG
-                  </span>
-                  <h1>
-                    Sicher auf
-                    <br />
-                    jeder Stufe<span>.</span>
-                  </h1>
-                  <p>
-                    Ob im Lager, in der Werkstatt oder im Büro:
-                    <br className="desktop-only" /> Lerne, wie du Leitern und
-                    Tritte sicher benutzt.
-                  </p>
-                  <button
-                    className="primary"
-                    onClick={() => {
-                      go("schulung");
-                      openLesson(current < 0 ? 0 : current);
-                    }}
-                  >
-                    <BookOpen size={19} />
-                    {pct > 0 && pct < 100
-                      ? "Schulung fortsetzen"
+                <h2>{lessons[current < 0 ? 0 : current].title}</h2>
+                <p>{lessons[current < 0 ? 0 : current].short}</p>
+                <button
+                  className="primary"
+                  onClick={() => {
+                    go("schulung");
+                    openLesson(current < 0 ? 0 : current);
+                  }}
+                >
+                  {pct > 0 && pct < 100
+                    ? "Weiterlernen"
+                    : pct === 100
+                      ? "Einheit wiederholen"
                       : "Schulung starten"}
-                  </button>
-                  <div className="hero-meta">
-                    <span>
-                      <Clock size={14} />5 kurze Einheiten
-                    </span>
-                    <span>
-                      <CheckCircle2 size={14} />
-                      In deinem Tempo
-                    </span>
-                  </div>
-                </div>
-                <LadderPhoto hero />
+                </button>
               </section>
-              <div className="quick-grid">
-                <button className="quick-card" onClick={() => go("check")}>
-                  <span className="icon-box amber">
-                    <ClipboardCheck size={25} />
-                  </span>
-                  <div>
-                    <h2>Leiter sicher prüfen</h2>
-                    <p>Schritt für Schritt vor der Benutzung.</p>
-                  </div>
-                  <ChevronRight size={22} />
-                </button>
-                <button className="quick-card" onClick={() => go("quiz")}>
-                  <span className="icon-box lilac">
-                    <GraduationCap size={27} />
-                  </span>
-                  <div>
-                    <h2>Wissen testen</h2>
-                    <p>10 Fragen aus deinem Arbeitsalltag.</p>
-                  </div>
-                  <ChevronRight size={22} />
-                </button>
-              </div>
               <section className="progress-card">
                 <div className="progress-icon">
                   <Flag size={23} />
@@ -407,44 +316,15 @@ function App() {
                   </p>
                 </div>
               </section>
-              <div className="home-bottom">
-                <section>
-                  <div className="section-heading">
-                    <div>
-                      <span className="eyebrow">
-                        DEIN WEG ZU MEHR SICHERHEIT
-                      </span>
-                      <h2>Fünf Schritte zu sicherem Arbeiten.</h2>
-                    </div>
-                    <button
-                      className="text-button"
-                      onClick={() => go("schulung")}
-                    >
-                      Alle Einheiten <ChevronRight size={16} />
-                    </button>
-                  </div>
-                  {lessonList(true)}
-                </section>
-                <aside className="daily-tip">
-                  <span className="tip-icon">
-                    <Lightbulb size={23} />
-                  </span>
-                  <span className="eyebrow">VOR ARBEITSBEGINN</span>
-                  <h2>
-                    Erst prüfen.
-                    <br />
-                    Dann benutzen.
-                  </h2>
-                  <p>
-                    Auch eine kleine Beschädigung kann gefährlich werden. Schau
-                    deshalb vor jeder Benutzung genau hin.
-                  </p>
-                  <div className="tip-rule" />
-                  <button className="text-button" onClick={() => go("praxis")}>
-                    Jetzt praktisch üben <ChevronRight size={16} />
-                  </button>
-                </aside>
-              </div>
+              <section className="home-check">
+                <div>
+                  <h2>Vor dem Einsatz</h2>
+                  <p>Kontrolliere die passende Leiter Schritt für Schritt.</p>
+                </div>
+                <button className="secondary" onClick={() => go("check")}>
+                  Leitercheck öffnen
+                </button>
+              </section>
             </>
           )}
           {page === "schulung" &&
@@ -490,7 +370,7 @@ function App() {
                   ))}
                 </div>
                 <section className="learning-card">
-                  <LadderPhoto scene={lesson} />
+                  {step === 0 && <LadderPhoto scene={lesson} />}
                   <div className="learning-body">
                     {step === 0 && (
                       <>
@@ -514,7 +394,11 @@ function App() {
                       <QuestionCard
                         key={lessons[lesson].id}
                         q={lessons[lesson].question}
-                        onAnswered={() => setLessonAnswered(true)}
+                        initialAnswer={lessonChoice}
+                        onAnswered={(_ok, choice) => {
+                          setLessonChoice(choice);
+                          setLessonAnswered(true);
+                        }}
                       />
                     )}{" "}
                     {step === 3 && (
@@ -556,7 +440,10 @@ function App() {
                       </button>
                       <button
                         className="primary"
-                        disabled={(step === 2 || step === 3) && !lessonAnswered}
+                        disabled={
+                          (step === 2 && lessonChoice === undefined) ||
+                          (step === 3 && !lessonAnswered)
+                        }
                         onClick={() => {
                           if (step < 3) {
                             setStep(step + 1);
@@ -578,13 +465,13 @@ function App() {
                         {step === 3 ? "Einheit abschließen" : "Weiter"}
                       </button>
                     </div>
-                    {step === 2 && !lessonAnswered && (
+                    {step === 2 && lessonChoice === undefined && (
                       <p className="fine-print">
                         Beantworte die Frage und lies die Rückmeldung. Danach
                         geht es weiter.
                       </p>
                     )}
-                    {step === 2 && !lessonAnswered && (
+                    {step === 2 && lessonChoice === undefined && (
                       <button
                         className="text-button"
                         onClick={() => {
@@ -705,121 +592,7 @@ function App() {
               )}
             </>
           )}
-          {page === "check" && (
-            <>
-              {title(
-                "VOR JEDER BENUTZUNG",
-                "Dein Sicherheitscheck.",
-                "Sieh genau hin. Bei einem Problem oder Zweifel gilt: zunächst nicht benutzen.",
-              )}
-              <div className="notice">
-                <Info size={20} />
-                <p>
-                  Orientierung für die Sichtkontrolle. Keine Einsatzfreigabe und
-                  kein Ersatz für vorgeschriebene Prüfungen, Herstelleranleitung
-                  oder betriebliche Vorgaben.
-                </p>
-              </div>
-              <section className="panel check-panel">
-                {getCheckState(checkAnswers, checkItems.length) === "stop" ? (
-                  <>
-                    <span className="danger-icon">
-                      <X size={30} />
-                    </span>
-                    <h2>Stopp. Leiter zunächst nicht benutzen.</h2>
-                    <p>
-                      {checkAnswers.at(-1) === 1
-                        ? "Du hast ein Problem erkannt."
-                        : "Du bist unsicher. Das ist ein guter Grund, nachzufragen."}
-                    </p>
-                    <div className="feedback danger">
-                      Beziehe eine verantwortliche oder fachkundige Person ein.
-                      Auffällige Schäden müssen durch eine zur Prüfung befähigte
-                      oder benannte Person geklärt werden. Sichere die Leiter
-                      nach betrieblicher Vorgabe gegen Weiterbenutzung.
-                    </div>
-                    <button
-                      className="secondary"
-                      onClick={() => setCheckAnswers([])}
-                    >
-                      <RotateCcw size={17} />
-                      Neuen Check beginnen
-                    </button>
-                  </>
-                ) : getCheckState(checkAnswers, checkItems.length) ===
-                  "reviewed" ? (
-                  <>
-                    <ShieldCheck size={40} className="green" />
-                    <h2>Sichtkontrolle durchlaufen.</h2>
-                    <p>
-                      Du hast keine Auffälligkeiten angegeben. Das ist keine
-                      Freigabe zur Benutzung.
-                    </p>
-                    <div className="feedback warning">
-                      Die betrieblichen Schutzmaßnahmen und die
-                      Herstelleranleitung gelten weiterhin. Bei neuen Zweifeln:
-                      nicht benutzen und nachfragen.
-                    </div>
-                    <button
-                      className="primary"
-                      onClick={() => setCheckAnswers([])}
-                    >
-                      Erneut prüfen
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <span className="eyebrow">
-                      FRAGE {checkAnswers.length + 1} VON {checkItems.length}
-                    </span>
-                    <div className="progress-track">
-                      <span
-                        style={{
-                          width:
-                            (checkAnswers.length / checkItems.length) * 100 +
-                            "%",
-                        }}
-                      />
-                    </div>
-                    <LadderPhoto scene={[4, 4, 1, 5, 4][checkAnswers.length]} />
-                    <h2>{checkItems[checkAnswers.length][0]}</h2>
-                    <p>{checkItems[checkAnswers.length][1]}</p>
-                    <div className="answers">
-                      {[
-                        "Alles in Ordnung",
-                        "Problem erkannt",
-                        "Ich bin unsicher",
-                      ].map((s, i) => (
-                        <button
-                          key={s}
-                          className={`answer check-answer c${i}`}
-                          onClick={() => setCheckAnswers((v) => [...v, i])}
-                        >
-                          {i === 0 ? (
-                            <CheckCircle2 size={21} />
-                          ) : i === 1 ? (
-                            <TriangleAlert size={21} />
-                          ) : (
-                            <Info size={21} />
-                          )}{" "}
-                          {s}
-                        </button>
-                      ))}
-                    </div>
-                    {checkAnswers.length > 0 && (
-                      <button
-                        className="back"
-                        onClick={() => setCheckAnswers((v) => v.slice(0, -1))}
-                      >
-                        <ChevronLeft size={16} />
-                        Vorherige Frage
-                      </button>
-                    )}
-                  </>
-                )}
-              </section>
-            </>
-          )}
+          <Inspection active={page === "check"} />
           {page === "quiz" && (
             <>
               {title(
@@ -870,6 +643,7 @@ function App() {
                         onClick={() => {
                           setQuizIndex(0);
                           setQuizAnswers([]);
+                          window.scrollTo(0, 0);
                         }}
                       >
                         Noch einmal testen
@@ -902,7 +676,10 @@ function App() {
                       />
                     </div>
                     {questions[quizIndex].showPhoto !== false && (
-                      <LadderPhoto scene={questions[quizIndex].scene} />
+                      <details className="quiz-photo">
+                        <summary>Passendes Orientierungsfoto ansehen</summary>
+                        <LadderPhoto scene={questions[quizIndex].scene} />
+                      </details>
                     )}
                     <QuestionCard
                       key={quizIndex}
@@ -930,6 +707,7 @@ function App() {
                             }));
                           }
                           setQuizIndex((i) => i + 1);
+                          window.scrollTo(0, 0);
                         }}
                       >
                         {quizIndex === questions.length - 1
