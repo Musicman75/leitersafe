@@ -2431,6 +2431,14 @@ footer button {
 .mobile-info {
   display: none;
 }
+.check-panel {
+  scroll-margin-top: 1rem;
+}
+.check-panel > .check-answer-hint {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: #536a7b;
+}
 .sidebar nav button.active {
   color: #ffc685;
   background: #35424a;

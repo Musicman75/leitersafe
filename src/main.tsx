@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
   Home,
@@ -132,6 +132,17 @@ function App() {
   const [photoCorrect, setPhotoCorrect] = useState(false);
   const [photoAttempt, setPhotoAttempt] = useState(0);
   const [checkAnswers, setCheckAnswers] = useState<number[]>([]);
+  const checkPanelRef = useRef<HTMLElement>(null);
+  const previousCheckAnswers = useRef(checkAnswers);
+  useEffect(() => {
+    if (previousCheckAnswers.current === checkAnswers) return;
+    previousCheckAnswers.current = checkAnswers;
+    const panel = checkPanelRef.current;
+    if (!panel) return;
+    // Keep the changed question/result visible after answering near the page bottom.
+    panel.querySelector<HTMLElement>("[data-check-heading]")?.focus({ preventScroll: true });
+    panel.scrollIntoView({ block: "start", behavior: "instant" });
+  }, [checkAnswers]);
   const [quizIndex, setQuizIndex] = useState(0);
   const [quizAnswers, setQuizAnswers] = useState<number[]>([]);
   const [resetConfirm, setResetConfirm] = useState(false);
@@ -709,13 +720,13 @@ function App() {
                   oder betriebliche Vorgaben.
                 </p>
               </div>
-              <section className="panel check-panel">
+              <section className="panel check-panel" ref={checkPanelRef} aria-labelledby="check-heading">
                 {getCheckState(checkAnswers, checkItems.length) === "stop" ? (
                   <>
                     <span className="danger-icon">
                       <X size={30} />
                     </span>
-                    <h2>Stopp. Leiter zunächst nicht benutzen.</h2>
+                    <h2 id="check-heading" data-check-heading tabIndex={-1}>Stopp. Leiter zunächst nicht benutzen.</h2>
                     <p>
                       {checkAnswers.at(-1) === 1
                         ? "Du hast ein Problem erkannt."
@@ -739,7 +750,7 @@ function App() {
                   "reviewed" ? (
                   <>
                     <ShieldCheck size={40} className="green" />
-                    <h2>Sichtkontrolle durchlaufen.</h2>
+                    <h2 id="check-heading" data-check-heading tabIndex={-1}>Sichtkontrolle durchlaufen.</h2>
                     <p>
                       Du hast keine Auffälligkeiten angegeben. Das ist keine
                       Freigabe zur Benutzung.
@@ -758,10 +769,10 @@ function App() {
                   </>
                 ) : (
                   <>
-                    <span className="eyebrow">
+                    <span className="eyebrow" aria-live="polite" aria-atomic="true">
                       FRAGE {checkAnswers.length + 1} VON {checkItems.length}
                     </span>
-                    <div className="progress-track">
+                    <div className="progress-track" role="progressbar" aria-label="Beantwortete Prüffragen" aria-valuenow={checkAnswers.length} aria-valuemin={0} aria-valuemax={checkItems.length}>
                       <span
                         style={{
                           width:
@@ -770,9 +781,15 @@ function App() {
                         }}
                       />
                     </div>
-                    <LadderPhoto scene={[4, 4, 1, 5, 4][checkAnswers.length]} />
-                    <h2>{checkItems[checkAnswers.length][0]}</h2>
+                    <h2 id="check-heading" data-check-heading tabIndex={-1}>{checkItems[checkAnswers.length][0]}</h2>
                     <p>{checkItems[checkAnswers.length][1]}</p>
+                    <LadderPhoto scene={[4, 4, 1, 5, 4][checkAnswers.length]} />
+                    <p className="check-answer-hint">
+                      {checkAnswers.length === checkItems.length - 1
+                        ? "Mit „Alles in Ordnung“ schließt du den Check ab."
+                        : "Mit „Alles in Ordnung“ geht es direkt zur nächsten Frage."}
+                      {" "}Bei einem Problem oder Unsicherheit stoppt der Check.
+                    </p>
                     <div className="answers">
                       {[
                         "Alles in Ordnung",
