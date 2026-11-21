@@ -109,3 +109,7 @@ Vor Einsatz manuell prüfen: alle vier Lernschritte durchlaufen; falsche Antwort
 Zehn Situationsfragen mit jeweils drei plausiblen Handlungsalternativen und Rückmeldung zur gewählten Antwort. Die Position der richtigen Antwort ist verteilt. Auswahl und Auswertung sind getrennte Schritte. Eine falsche Lernentscheidung kann nach dem Lesen der Erklärung fortgesetzt werden; im Wissenstest bleibt das erste Ergebnis gewertet. Die Bildübung verwendet ein echtes Foto und fragt nach Maßnahmen bei Tür und Matte. Sie behauptet keine aus dem Foto nicht nachweisbaren Defekte.
 
 Vier Fotoansichten aus drei Originalfotografien, lokal in `public/images/` (kein Hotlinking). Urheber, Originalquellen, Änderungen und Lizenzen stehen in `public/images/CREDITS.md` und in der App unter Informationen & Quellen. Die Bilder stammen nicht von einer generativen KI.
+
+## Bildzuordnung zu Lernaufgaben
+
+Die Grundlagen verknüpfen das Thema über einen expliziten Medienschlüssel mit der Ansicht (`src/CheckTopicMedia.tsx`), unabhängig von der Reihenfolge der Themen. Holme, Stufen/Plattform und Spreizsicherung zeigen relevante Ausschnitte vorhandener Originalfotos; Füße und Aufstellort nutzen die passenden Detail- bzw. Umgebungsfotos. Aufgabe und Anleitung werden durch eine beschriftete Darstellung von Tätigkeit, Kennzeichnung und Herstelleranleitung erläutert. In der Schulung sind Bildzuordnungen ausdrücklich in den Einheiten hinterlegt; Einheiten ohne passendes Foto zeigen keine beliebige Leiteraufnahme.

@@ -2622,3 +2622,25 @@ footer button {
 .check-topic-body > p { margin-bottom: 1.25rem; color: #415d71; }
 .inspection-navigation { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.5rem; }
 .inspection-navigation button { flex: 1 1 10rem; justify-content: center; }
+.topic-detail-grid { display: grid; gap: 1rem; }
+.topic-detail-grid.paired { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.topic-detail-photo { margin: 0; border: 1px solid #dce5ea; border-radius: 0.625rem; overflow: hidden; background: white; }
+.topic-detail-stage { height: 21rem; padding: 0.75rem; display: grid; place-items: center; background: #f1f5f7; }
+.topic-detail-stage svg { display: block; width: 100%; height: 100%; }
+.topic-detail-photo figcaption { border-top: 1px solid #dce5ea; padding: 1rem; }
+.topic-detail-photo strong { font-size: 1rem; line-height: 1.5; }
+.topic-detail-photo p { margin-top: 0.5rem; color: #415d71; }
+.topic-detail-photo small { display: block; font-size: 0.8125rem; line-height: 1.6; color: #637786; margin-top: 0.75rem; }
+.topic-instruction-visual { margin: 0; border: 1px solid #dce5ea; border-radius: 0.75rem; overflow: hidden; }
+.topic-instruction-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.topic-instruction-steps > div { padding: 1.25rem; background: #edf3f6; }
+.topic-instruction-steps > div + div { border-left: 1px solid #d3dfe6; }
+.topic-instruction-steps svg { color: #23634e; margin-bottom: 1rem; }
+.topic-instruction-steps h3 { font-size: 1.125rem; margin-bottom: 0.5rem; }
+.topic-instruction-steps p { font-size: 1rem; color: #415d71; }
+.topic-instruction-visual figcaption { padding: 1rem 1.25rem; font-size: 0.875rem; color: #536a7b; line-height: 1.6; }
+@media (max-width: 600px) {
+  .topic-detail-grid.paired, .topic-instruction-steps { grid-template-columns: 1fr; }
+  .topic-instruction-steps > div + div { border-left: 0; border-top: 1px solid #d3dfe6; }
+  .topic-detail-stage { height: 17rem; }
+}

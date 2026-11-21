@@ -32,6 +32,7 @@ import {
 import { LadderPhoto, PhotoCredits } from "./LadderPhoto";
 import { readProgress, emptyProgress } from "./progress";
 import { LadderInspection } from "./LadderInspection";
+import { CheckTopicMedia } from "./CheckTopicMedia";
 import "./style.css";
 type Page = "start" | "schulung" | "praxis" | "check" | "pruefung" | "quiz" | "info";
 const navigation = [
@@ -478,7 +479,7 @@ function App() {
                   ))}
                 </div>
                 <section className="learning-card">
-                  <LadderPhoto scene={lesson} />
+                  {lessons[lesson].scene !== null && <LadderPhoto scene={lessons[lesson].scene!} />}
                   <div className="learning-body">
                     {step === 0 && (
                       <>
@@ -706,12 +707,12 @@ function App() {
           <LadderInspection hidden={page !== "pruefung"} />
           {page === "check" && (
             <section className="check-topics" aria-label="Grundlagen der Leiterkontrolle">
-              {checkItems.map(([heading, description], i) => (
+              {checkItems.map(([heading, description, media]) => (
                 <details className="check-topic" key={heading}>
                   <summary>{heading}</summary>
                   <div className="check-topic-body">
                     <p>{description}</p>
-                    <LadderPhoto scene={[4, 4, 1, 5, 4][i]} />
+                    <CheckTopicMedia topic={media} />
                   </div>
                 </details>
               ))}

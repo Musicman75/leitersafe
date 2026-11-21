@@ -11,6 +11,7 @@ export type Question = {
 };
 export type Lesson = {
   id: string;
+  scene: number | null;
   title: string;
   short: string;
   text: string;
@@ -228,6 +229,7 @@ export const questions: Question[] = [
 export const lessons: Lesson[] = [
   {
     id: "auswahl",
+    scene: 0,
     title: "Welche Leiter brauche ich?",
     short: "Das passende Arbeitsmittel wählen.",
     text: "Wähle das Arbeitsmittel passend zur Aufgabe. Eine Leiter ist nicht immer die sicherste Lösung. Dein Betrieb muss vorher die Gefahren beurteilen.",
@@ -241,6 +243,7 @@ export const lessons: Lesson[] = [
   },
   {
     id: "kontrolle",
+    scene: 1,
     title: "Ist meine Leiter in Ordnung?",
     short: "Schäden rechtzeitig entdecken.",
     text: "Sieh dir die Leiter vor jeder Benutzung an. Die Holme sind die langen Seitenteile. Sie, die Stufen und die Füße müssen unbeschädigt sein.",
@@ -253,6 +256,7 @@ export const lessons: Lesson[] = [
   },
   {
     id: "aufstellen",
+    scene: 5,
     title: "Wie stelle ich die Leiter sicher auf?",
     short: "Ein sicherer Stand ist der Anfang.",
     text: "Die Leiter braucht einen ebenen, tragfähigen und rutschhemmenden Untergrund. Beachte die Anleitung an deiner Leiter.",
@@ -266,6 +270,7 @@ export const lessons: Lesson[] = [
   },
   {
     id: "arbeiten",
+    scene: null,
     title: "Wie arbeite ich sicher auf der Leiter?",
     short: "Sicher stehen und festhalten.",
     text: "Lehne dich nicht weit zur Seite. Wenn du die Stelle nicht bequem erreichst, steige sicher ab und stelle die Leiter neu auf.",
@@ -278,6 +283,7 @@ export const lessons: Lesson[] = [
   },
   {
     id: "gefahr",
+    scene: null,
     title: "Was mache ich bei Gefahr?",
     short: "Stoppen. Sichern. Bescheid sagen.",
     text: "Benutze eine beschädigte Leiter nicht. Melde den Mangel und verhindere nach betrieblicher Vorgabe, dass andere sie weiterverwenden.",
@@ -293,24 +299,29 @@ export const checkItems = [
   [
     "Holme und Verbindungen",
     "Bei Holmen und Verbindungen kommt es auf Risse, Verformungen und lockere oder fehlende Teile an. Beide Leiterseiten und die Rückseite gehören zur Sichtkontrolle.",
+    "holme",
   ],
   [
     "Stufen und Plattform",
     "Stufen, Sprossen und Plattform sowie ihre Befestigungen gehören zur Sichtkontrolle. Beschädigungen und rutschige Beläge wie Öl oder Schmutz sind wichtige Merkmale.",
+    "stufen",
   ],
   [
     "Füße und Sicherungen",
     "Bei den Füßen sind Vollständigkeit, Beschädigungen und Verschleiß wichtig. Je nach Bauart kommen Spreizsicherungen, Traversen oder Verriegelungen hinzu. Ihre richtige Stellung ergibt sich aus der Herstelleranleitung.",
+    "fuesse",
   ],
   [
     "Aufstellort und Umgebung",
     "Zur Leiterkontrolle gehört auch die Umgebung: ein ebener, tragfähiger und rutschhemmender Untergrund sowie Gefahren durch Türen und Verkehrswege. Erforderliche Absicherungen richten sich nach dem Einsatzort.",
+    "umgebung",
   ],
   [
     "Aufgabe und Anleitung",
     "Die vorgesehene Aufgabe, die Bauart der Leiter und die betrieblichen Vorgaben müssen zusammenpassen. Kennzeichnung und Herstelleranleitung erläutern die bestimmungsgemäße Verwendung.",
+    "anleitung",
   ],
-];
+] as const;
 export const practices = [
   {
     title: "Prüfe deine Leiter.",
@@ -337,7 +348,7 @@ export const practices = [
   {
     title: "Gefährliche Aufstellungen erkennen",
     description: "Ein guter Stand macht den Unterschied.",
-    scene: 2,
+    scene: 5,
     steps: [
       "Betrachte einen möglichen Aufstellort vom Boden.",
       "Suche lose Unterlagen, Unebenheiten und rutschige Stellen.",
@@ -348,7 +359,7 @@ export const practices = [
   {
     title: "Die Umgebung kontrollieren",
     description: "Sicherheit beginnt um dich herum.",
-    scene: 4,
+    scene: 5,
     steps: [
       "Sieh dich vom Boden aus um.",
       "Achte auf Fahrwege, Türen und elektrische Gefahren.",
