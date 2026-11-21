@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
   Home,
@@ -14,7 +14,6 @@ import {
   Clock,
   LockKeyhole,
   TriangleAlert,
-  X,
   RotateCcw,
   Lightbulb,
   Flag,
@@ -32,7 +31,6 @@ import {
 } from "./content";
 import { LadderPhoto, PhotoCredits } from "./LadderPhoto";
 import { readProgress, emptyProgress } from "./progress";
-import { getCheckState } from "./check";
 import { LadderInspection } from "./LadderInspection";
 import "./style.css";
 type Page = "start" | "schulung" | "praxis" | "check" | "pruefung" | "quiz" | "info";
@@ -40,7 +38,7 @@ const navigation = [
   { id: "start", label: "Startseite", shortLabel: "Start", icon: Home },
   { id: "schulung", label: "Schulung", shortLabel: "Lernen", icon: BookOpen },
   { id: "praxis", label: "Praxisübungen", shortLabel: "Praxis", icon: Footprints },
-  { id: "check", label: "Sicherheitscheck", shortLabel: "Check", icon: ClipboardCheck },
+  { id: "check", label: "Leiterkontrolle", shortLabel: "Check", icon: ClipboardCheck },
   { id: "quiz", label: "Wissenstest", shortLabel: "Test", icon: GraduationCap },
 ] as const;
 function QuestionCard({
@@ -132,18 +130,6 @@ function App() {
   const [practiceSteps, setPracticeSteps] = useState<number[]>([]);
   const [photoCorrect, setPhotoCorrect] = useState(false);
   const [photoAttempt, setPhotoAttempt] = useState(0);
-  const [checkAnswers, setCheckAnswers] = useState<number[]>([]);
-  const checkPanelRef = useRef<HTMLElement>(null);
-  const previousCheckAnswers = useRef(checkAnswers);
-  useEffect(() => {
-    if (previousCheckAnswers.current === checkAnswers) return;
-    previousCheckAnswers.current = checkAnswers;
-    const panel = checkPanelRef.current;
-    if (!panel) return;
-    // Keep the changed question/result visible after answering near the page bottom.
-    panel.querySelector<HTMLElement>("[data-check-heading]")?.focus({ preventScroll: true });
-    panel.scrollIntoView({ block: "start", behavior: "instant" });
-  }, [checkAnswers]);
   const [quizIndex, setQuizIndex] = useState(0);
   const [quizAnswers, setQuizAnswers] = useState<number[]>([]);
   const [resetConfirm, setResetConfirm] = useState(false);
@@ -357,8 +343,8 @@ function App() {
                     <ClipboardCheck size={25} />
                   </span>
                   <div>
-                    <h2>Leiter sicher prüfen</h2>
-                    <p>Schritt für Schritt vor der Benutzung.</p>
+                    <h2>Leiterkontrolle verstehen</h2>
+                    <p>Worauf du bei einer Leiter achten solltest.</p>
                   </div>
                   <ChevronRight size={22} />
                 </button>
@@ -709,9 +695,9 @@ function App() {
           )}
           {(page === "check" || page === "pruefung") && (
             <>
-              {title("LEITER KENNEN. SICHER HANDELN.", page === "pruefung" ? "Prüfstellen an deiner Leiter." : "Dein Sicherheitscheck.", "Wähle eine Bauart und entdecke ihre Prüfstellen oder durchlaufe den allgemeinen Sicherheitscheck.")}
+              {title("LEITER KENNEN. SICHER HANDELN.", page === "pruefung" ? "Prüfstellen an deiner Leiter." : "Worauf du achten solltest.", "Entdecke die Bauteile und lerne, worauf es bei der Kontrolle einer Leiter ankommt.")}
               <nav className="check-sections" aria-label="Bereiche der Leiterkontrolle">
-                <a href="#check" aria-current={page === "check" ? "page" : undefined} onClick={event => { event.preventDefault(); go("check"); }}>Sicherheitscheck</a>
+                <a href="#check" aria-current={page === "check" ? "page" : undefined} onClick={event => { event.preventDefault(); go("check"); }}>Grundlagen</a>
                 <a href="#pruefung" aria-current={page === "pruefung" ? "page" : undefined} onClick={event => { event.preventDefault(); go("pruefung"); }}>Leitertyp & Prüfstellen</a>
               </nav>
               <div className="notice"><Info size={20} aria-hidden="true" /><p>Sichtkontrolle vor der Benutzung: Bei Schäden oder Unsicherheit zunächst nicht benutzen und fachkundig klären lassen. Keine Einsatzfreigabe und kein Ersatz für die wiederkehrende betriebliche Prüfung.</p></div>
@@ -719,112 +705,17 @@ function App() {
           )}
           <LadderInspection hidden={page !== "pruefung"} />
           {page === "check" && (
-            <>
-              <section className="panel check-panel" ref={checkPanelRef} aria-labelledby="check-heading">
-                {getCheckState(checkAnswers, checkItems.length) === "stop" ? (
-                  <>
-                    <span className="danger-icon">
-                      <X size={30} />
-                    </span>
-                    <h2 id="check-heading" data-check-heading tabIndex={-1}>Stopp. Leiter zunächst nicht benutzen.</h2>
-                    <p>
-                      {checkAnswers.at(-1) === 1
-                        ? "Du hast ein Problem erkannt."
-                        : "Du bist unsicher. Das ist ein guter Grund, nachzufragen."}
-                    </p>
-                    <div className="feedback danger">
-                      Beziehe eine verantwortliche oder fachkundige Person ein.
-                      Auffällige Schäden müssen durch eine zur Prüfung befähigte
-                      oder benannte Person geklärt werden. Sichere die Leiter
-                      nach betrieblicher Vorgabe gegen Weiterbenutzung.
-                    </div>
-                    <button
-                      className="secondary"
-                      onClick={() => setCheckAnswers([])}
-                    >
-                      <RotateCcw size={17} />
-                      Neuen Check beginnen
-                    </button>
-                  </>
-                ) : getCheckState(checkAnswers, checkItems.length) ===
-                  "reviewed" ? (
-                  <>
-                    <ShieldCheck size={40} className="green" />
-                    <h2 id="check-heading" data-check-heading tabIndex={-1}>Sichtkontrolle durchlaufen.</h2>
-                    <p>
-                      Du hast keine Auffälligkeiten angegeben. Das ist keine
-                      Freigabe zur Benutzung.
-                    </p>
-                    <div className="feedback warning">
-                      Die betrieblichen Schutzmaßnahmen und die
-                      Herstelleranleitung gelten weiterhin. Bei neuen Zweifeln:
-                      nicht benutzen und nachfragen.
-                    </div>
-                    <button
-                      className="primary"
-                      onClick={() => setCheckAnswers([])}
-                    >
-                      Erneut prüfen
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <span className="eyebrow" aria-live="polite" aria-atomic="true">
-                      FRAGE {checkAnswers.length + 1} VON {checkItems.length}
-                    </span>
-                    <div className="progress-track" role="progressbar" aria-label="Beantwortete Prüffragen" aria-valuenow={checkAnswers.length} aria-valuemin={0} aria-valuemax={checkItems.length}>
-                      <span
-                        style={{
-                          width:
-                            (checkAnswers.length / checkItems.length) * 100 +
-                            "%",
-                        }}
-                      />
-                    </div>
-                    <h2 id="check-heading" data-check-heading tabIndex={-1}>{checkItems[checkAnswers.length][0]}</h2>
-                    <p>{checkItems[checkAnswers.length][1]}</p>
-                    <LadderPhoto scene={[4, 4, 1, 5, 4][checkAnswers.length]} />
-                    <p className="check-answer-hint">
-                      {checkAnswers.length === checkItems.length - 1
-                        ? "Mit „Alles in Ordnung“ schließt du den Check ab."
-                        : "Mit „Alles in Ordnung“ geht es direkt zur nächsten Frage."}
-                      {" "}Bei einem Problem oder Unsicherheit stoppt der Check.
-                    </p>
-                    <div className="answers">
-                      {[
-                        "Alles in Ordnung",
-                        "Problem erkannt",
-                        "Ich bin unsicher",
-                      ].map((s, i) => (
-                        <button
-                          key={s}
-                          className={`answer check-answer c${i}`}
-                          onClick={() => setCheckAnswers((v) => [...v, i])}
-                        >
-                          {i === 0 ? (
-                            <CheckCircle2 size={21} />
-                          ) : i === 1 ? (
-                            <TriangleAlert size={21} />
-                          ) : (
-                            <Info size={21} />
-                          )}{" "}
-                          {s}
-                        </button>
-                      ))}
-                    </div>
-                    {checkAnswers.length > 0 && (
-                      <button
-                        className="back"
-                        onClick={() => setCheckAnswers((v) => v.slice(0, -1))}
-                      >
-                        <ChevronLeft size={16} />
-                        Vorherige Frage
-                      </button>
-                    )}
-                  </>
-                )}
-              </section>
-            </>
+            <section className="check-topics" aria-label="Grundlagen der Leiterkontrolle">
+              {checkItems.map(([heading, description], i) => (
+                <details className="check-topic" key={heading}>
+                  <summary>{heading}</summary>
+                  <div className="check-topic-body">
+                    <p>{description}</p>
+                    <LadderPhoto scene={[4, 4, 1, 5, 4][i]} />
+                  </div>
+                </details>
+              ))}
+            </section>
           )}
           {page === "quiz" && (
             <>

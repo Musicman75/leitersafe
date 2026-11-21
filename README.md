@@ -49,7 +49,7 @@ Die Vite-Konfiguration übernimmt `BASE_PATH`. Der Workflow setzt sie automatisc
 - Startseite mit Einstieg, Check, Test und Lernfortschritt
 - Fünf Einheiten mit den Schritten Anschauen, Verstehen, Entscheiden, Ausprobieren
 - Fünf Praxisaufgaben ohne Aufstieg; Bildfehler-Übung
-- Schrittweise Sichtkontrolle, die bei Problemen oder Unsicherheit sofort stoppt
+- Aufklappbare Grundlagen der Leiterkontrolle ohne Zustandsabfrage oder Bewertung
 - Zehn Quizfragen mit sofortiger Erklärung und Ergebnisübersicht
 - Lokaler Lernfortschritt, Praxisabschlüsse und bestes Testergebnis; Rücksetzen mit Bestätigung
 - Quellen- und Informationsseite; echte Leiterfotografien, lokal ausgeliefert und mit Bildnachweisen
@@ -59,11 +59,11 @@ Die Vite-Konfiguration übernimmt `BASE_PATH`. Der Workflow setzt sie automatisc
 
 Direkteinstieg: `#pruefung`. Eine Bauart auswählen und einen Punkt im Bild oder einen Eintrag in der gleichwertigen Prüfliste anklicken. Die Erklärung nennt die zu kontrollierenden Bauteile. Jede Bauart hat sechs oder sieben Prüfstellen; typspezifisch etwa Spreizsicherung, Plattform, Haken, Führungen oder Gelenksperren. Die Darstellungen sind eigene SVG-Schemata und keine modellspezifischen Aufbauzeichnungen.
 
-„Keine Auffälligkeit“ führt zur nächsten offenen Prüfstelle. Problem oder Unsicherheit sperren die weitere positive Bewertung dieser Kontrolle und zeigen den Stopp-Hinweis. Ein Neustart erfordert eine Bestätigung. Kontrollstände je Bauart bleiben bei Bereichs- und Typwechseln innerhalb der laufenden App erhalten; beim Neuladen werden sie verworfen. Sie werden nicht als Einsatzfreigabe oder Prüfprotokoll gespeichert. Die Funktion unterstützt die Sichtkontrolle vor Verwendung und ersetzt keine wiederkehrende betriebliche Prüfung.
+Die Prüfstellen lassen sich frei anwählen oder über „Vorherige Prüfstelle“ und „Nächste Prüfstelle“ durchgehen. Der Bereich vermittelt Wissen: Es gibt keine Zustandsabfrage, Bewertung, Freigabe, Stopp-Auswertung oder Ergebnisaufzeichnung. Allgemeine Hinweise zum Umgang mit Schäden und Unsicherheit bleiben als Lerninhalt erhalten. Die Funktion ersetzt keine wiederkehrende betriebliche Prüfung.
 
 Inhalte und Hotspot-Koordinaten: `src/inspection.ts`; Oberfläche und Schemata: `src/LadderInspection.tsx`. Fachquellen: DGUV Information 208-016, Abschnitte 5, 6 und 7, offizielle Wiedergabe bei der BG BAU; Links stehen direkt in der Funktion. Quellenabgleich am 21.11.2026.
 
-Automatisiert geprüft: Inhalte, eindeutige Punkte, überlappungsfreie 44-Pixel-Tippflächen bei 320 Pixel Bildschirmbreite und Stopp-Logik an jeder Prüfstelle. Browserprüfung in Chromium bei 320, 390, 768 und 1280 Pixel: alle Markierungen, vollständiger Ablauf, beide Stoppfälle, bestätigter/abgebrochener Neustart und Erhalt der Angaben beim Wechseln. Eine Prüfung auf einem physischen iPhone steht aus.
+Automatisiert geprüft: Inhalte, eindeutige Punkte und überlappungsfreie 44-Pixel-Tippflächen bei 320 Pixel Bildschirmbreite. Browserprüfung: frei anwählbare Prüfstellen, Vor-/Zurück-Navigation, aufklappbare Grundlagen und keine Zustandsbewertung. Eine Prüfung auf einem physischen iPhone steht aus.
 
 ## Neue Inhalte ergänzen
 
@@ -94,15 +94,15 @@ Der Check ist keine Einsatzfreigabe und ersetzt keine wiederkehrende Prüfung. D
 
 ## Datenschutz und Technik
 
-`localStorage` speichert ausschließlich Lernzustände auf diesem Browser unter diesem Ursprung. Keine Übertragung, keine Analytics, keine extern geladenen Schriftarten. Speicherfehler werden angezeigt. Ein anderer Browser oder das Löschen der Browserdaten entfernt den Fortschritt. Check-Ergebnisse werden absichtlich nicht dauerhaft als Freigabe gespeichert.
+`localStorage` speichert ausschließlich Lernzustände auf diesem Browser unter diesem Ursprung. Keine Übertragung, keine Analytics, keine extern geladenen Schriftarten. Speicherfehler werden angezeigt. Ein anderer Browser oder das Löschen der Browserdaten entfernt den Fortschritt. Der Check-Bereich speichert keine Zustandsangaben zur Leiter.
 
 Die `.openai/hosting.json` dient ausschließlich einer optionalen privaten Sites-Vorschau; GitHub Pages verwendet sie nicht. Für ein unabhängiges Repository kann sie entfernt werden.
 
 ## Validierung dieses Prototyps
 
-TypeScript-Prüfung und Produktionsbuild bestanden. Die automatischen Tests prüfen Inhaltskonsistenz, defensive Speicherbehandlung und die Stopp-Logik bei Problemen oder Unsicherheit. Ein zusätzlicher Build mit `BASE_PATH=/leitersafe/` prüft die Ausgabe für ein Repository-Unterverzeichnis. Browser-Interaktionen und die tatsächliche Darstellung auf einem Smartphone konnten wegen des ausgefallenen Vorschau-Relays noch nicht geprüft werden.
+TypeScript-Prüfung und Produktionsbuild bestanden. Die automatischen Tests prüfen Inhaltskonsistenz, defensive Speicherbehandlung und die Erreichbarkeit der Prüfstellen. Ein zusätzlicher Build mit `BASE_PATH=/leitersafe/` prüft die Ausgabe für ein Repository-Unterverzeichnis. Browser-Interaktionen werden in Chromium bei Handy- und Desktopgrößen geprüft; eine Prüfung auf einem physischen Smartphone steht aus.
 
-Vor Einsatz manuell prüfen: alle vier Lernschritte durchlaufen; falsche Antwort erklären lassen und wiederholen; Praxisaufgabe markieren; Check jeweils mit Problem, Unsicherheit und allen positiven Antworten durchlaufen; Quiz abschließen und erneut starten; Browser neu laden und Fortschritt prüfen; Rücksetzen abbrechen und bestätigen; Bildschirmbreite 375 px sowie Tastaturbedienung prüfen.
+Vor Einsatz manuell prüfen: alle vier Lernschritte durchlaufen; falsche Antwort erklären lassen und wiederholen; Praxisaufgabe markieren; Grundlagen aufklappen und Prüfstellen aller Bauarten ansehen; Quiz abschließen und erneut starten; Browser neu laden und Fortschritt prüfen; Rücksetzen abbrechen und bestätigen; Bildschirmbreite 375 px sowie Tastaturbedienung prüfen.
 
 ## Überarbeitung: Praxisfragen und Fotografien
 

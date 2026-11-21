@@ -69,8 +69,7 @@ test("Speicher lädt sicher bei ungültigen Daten oder blockiertem Browser", () 
     best: 8,
   });
 });
-const { getCheckState } = await loadTS("../src/check.ts");
-const { ladderTypes, inspectionState } = await loadTS("../src/inspection.ts");
+const { ladderTypes } = await loadTS("../src/inspection.ts");
 test("Jede Leiterbauart hat eigene erreichbare Prüfstellen und vollständige Hinweise", () => {
   assert.deepEqual(ladderTypes.map(t => t.id), ["anlege", "steh", "schiebe", "gelenk"]);
   for (const type of ladderTypes) {
@@ -83,25 +82,7 @@ test("Jede Leiterbauart hat eigene erreichbare Prüfstellen und vollständige Hi
         assert.ok(Math.hypot(p.x - other.x, p.y - other.y) * 246 / 360 >= 44);
       }
     }
-    assert.equal(inspectionState(type, {}), "offen");
-    const all = Object.fromEntries(type.points.map(p => [p.id, "ok"]));
-    assert.equal(inspectionState(type, all), "angesehen");
-    for (const p of type.points) {
-      assert.equal(inspectionState(type, { ...all, [p.id]: "problem" }), "stopp");
-      assert.equal(inspectionState(type, { ...all, [p.id]: "unsicher" }), "stopp");
-      const partial = { ...all }; delete partial[p.id];
-      assert.equal(inspectionState(type, partial), "offen");
-    }
   }
-});
-test("Probleme und Unsicherheit stoppen den Check bei jeder Frage", () => {
-  for (let index = 0; index < 5; index++)
-    for (const answer of [1, 2])
-      assert.equal(getCheckState([...Array(index).fill(0), answer], 5), "stop");
-  assert.equal(getCheckState([], 5), "questions");
-  assert.equal(getCheckState([0, 0], 5), "questions");
-  assert.equal(getCheckState([0, 0, 0, 0, 0], 5), "reviewed");
-  assert.equal(getCheckState([0, 0, 1, 0, 0], 5), "stop");
 });
 test("Praxisfragen haben vollständige Rückmeldungen und ausgewogene Antwortpositionen", () => {
   const positions = [0, 0, 0];

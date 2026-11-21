@@ -1,6 +1,4 @@
 export type LadderKind = "anlege" | "steh" | "schiebe" | "gelenk";
-export type Finding = "ok" | "problem" | "unsicher";
-export type Findings = Record<string, Finding>;
 export interface InspectionPoint {
   id: string;
   title: string;
@@ -58,10 +56,6 @@ export const ladderTypes: LadderType[] = [
     ],
   },
 ];
-export function inspectionState(type: LadderType, findings: Findings): "offen" | "stopp" | "angesehen" {
-  if (type.points.some(p => findings[p.id] === "problem" || findings[p.id] === "unsicher")) return "stopp";
-  return type.points.every(p => findings[p.id] === "ok") ? "angesehen" : "offen";
-}
 export const inspectionSources = [
   { title: "DGUV 208-016 · Bauartabhängige Verwendung", url: "https://www.bgbau-medien.de/handlungshilfen_gb/daten/dguv/208_016/5.htm" },
   { title: "DGUV 208-016 · Prüfung und Instandhaltung", url: "https://www.bgbau-medien.de/handlungshilfen_gb/daten/dguv/208_016/6.htm" },

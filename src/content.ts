@@ -292,23 +292,23 @@ export const lessons: Lesson[] = [
 export const checkItems = [
   [
     "Holme und Verbindungen",
-    "Sind die Seitenteile und Verbindungen ohne sichtbare Risse, Verformungen oder lockere Teile?",
+    "Bei Holmen und Verbindungen kommt es auf Risse, Verformungen und lockere oder fehlende Teile an. Beide Leiterseiten und die Rückseite gehören zur Sichtkontrolle.",
   ],
   [
     "Stufen und Plattform",
-    "Sind alle Stufen fest, unbeschädigt und frei von Öl oder Schmutz?",
+    "Stufen, Sprossen und Plattform sowie ihre Befestigungen gehören zur Sichtkontrolle. Beschädigungen und rutschige Beläge wie Öl oder Schmutz sind wichtige Merkmale.",
   ],
   [
     "Füße und Sicherungen",
-    "Sind die Füße vollständig und unbeschädigt? Sind die für diese Leiter vorgesehenen Sicherungen nach Anleitung wirksam?",
+    "Bei den Füßen sind Vollständigkeit, Beschädigungen und Verschleiß wichtig. Je nach Bauart kommen Spreizsicherungen, Traversen oder Verriegelungen hinzu. Ihre richtige Stellung ergibt sich aus der Herstelleranleitung.",
   ],
   [
     "Aufstellort und Umgebung",
-    "Ist der Untergrund eben, tragfähig und rutschhemmend? Sind Verkehrswege und andere Gefahren wirksam abgesichert?",
+    "Zur Leiterkontrolle gehört auch die Umgebung: ein ebener, tragfähiger und rutschhemmender Untergrund sowie Gefahren durch Türen und Verkehrswege. Erforderliche Absicherungen richten sich nach dem Einsatzort.",
   ],
   [
     "Aufgabe und Anleitung",
-    "Ist die Leiter für diese Aufgabe betrieblich vorgesehen? Kennst du die Herstelleranleitung und die betrieblichen Vorgaben?",
+    "Die vorgesehene Aufgabe, die Bauart der Leiter und die betrieblichen Vorgaben müssen zusammenpassen. Kennzeichnung und Herstelleranleitung erläutern die bestimmungsgemäße Verwendung.",
   ],
 ];
 export const practices = [
