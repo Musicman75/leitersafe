@@ -966,12 +966,6 @@ footer button {
 .skip-link:focus {
   top: 10px;
 }
-.menu-button {
-  display: none;
-}
-.scrim {
-  display: none;
-}
 @media (min-width: 1500px) {
   main {
     padding-top: 44px;
@@ -1195,12 +1189,7 @@ footer button {
     font-size: 16px;
   }
   .sidebar {
-    transform: translateX(-100%);
-    width: 265px;
-    padding: 30px 20px;
-  }
-  .sidebar.open {
-    transform: translateX(0);
+    display: none;
   }
   .brand {
     font-size: 28px;
@@ -1234,13 +1223,6 @@ footer button {
   .local-note {
     font-size: 11px;
   }
-  .scrim {
-    display: block;
-    position: fixed;
-    inset: 0;
-    background: #102a3980;
-    z-index: 25;
-  }
   .app-shell {
     margin-left: 0;
   }
@@ -1249,13 +1231,6 @@ footer button {
     padding: 0 20px;
     gap: 12px;
     font-size: 11px;
-  }
-  .menu-button {
-    display: block;
-    background: none;
-    color: #314b41;
-    padding: 8px;
-    margin-left: -8px;
   }
   .topbar > span {
     flex: 1;
@@ -2449,3 +2424,123 @@ footer button {
 .hero-photo .photo-stage{flex:0 0 340px;height:340px;min-height:0;max-height:340px}
 @media(max-width:900px) and (min-width:681px){.hero-photo .photo-stage{flex:0 0 290px;height:290px;max-height:290px;min-height:0}}
 @media(max-width:680px){.hero-photo .photo-stage{height:230px;max-height:230px;min-height:0;flex:none}}
+
+/* Direct, thumb-friendly navigation; the navy surface belongs to LeiterSafe. */
+.bottom-nav,
+.mobile-brand,
+.mobile-info {
+  display: none;
+}
+.sidebar nav button.active {
+  color: #ffc685;
+  background: #35424a;
+}
+.sidebar nav button.active svg {
+  color: currentColor;
+}
+.sidebar .nav-dot {
+  background: currentColor;
+}
+@media (max-width: 900px) {
+  html {
+    scroll-padding-bottom: calc(7rem + env(safe-area-inset-bottom, 0px));
+  }
+  .sidebar {
+    display: none;
+  }
+  .app-shell {
+    margin-left: 0;
+    padding-bottom: calc(7rem + env(safe-area-inset-bottom, 0px));
+  }
+  .topbar {
+    min-height: 4.25rem;
+    height: auto;
+    padding: 0.5rem max(1.25rem, env(safe-area-inset-left, 0px));
+    gap: 1rem;
+  }
+  .topbar > span,
+  .topbar-right {
+    display: none;
+  }
+  .mobile-brand {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    font-size: 1.5rem;
+    font-weight: 750;
+    letter-spacing: -0.06rem;
+    color: #18344a;
+  }
+  .mobile-brand span {
+    color: #23634e;
+  }
+  .mobile-info {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+    background: #edf2f5;
+    color: #304e64;
+    font-size: 0.875rem;
+  }
+  .mobile-info[aria-current="page"] {
+    background: #dce9e2;
+    color: #194d3b;
+    box-shadow: inset 0 0 0 2px #23634e;
+  }
+  .bottom-nav {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.125rem;
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 30;
+    padding: 0.625rem max(0.25rem, env(safe-area-inset-right, 0px))
+      calc(0.625rem + env(safe-area-inset-bottom, 0px))
+      max(0.25rem, env(safe-area-inset-left, 0px));
+    background: #142d46;
+    border-top: 1px solid #37516a;
+    box-shadow: 0 -4px 20px #142d4614;
+  }
+  .bottom-nav a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    min-width: 0;
+    min-height: 4.5rem;
+    padding: 0.25rem 0;
+    border-radius: 0.625rem;
+    color: #c5d0dc;
+    font-size: 0.875rem;
+    font-weight: 550;
+    line-height: 1.4;
+    text-align: center;
+  }
+  .bottom-nav-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: min(100%, 4rem);
+    min-height: 2.375rem;
+    border-radius: 2rem;
+  }
+  .bottom-nav a[aria-current="page"] {
+    color: #ffc685;
+    font-weight: 750;
+  }
+  .bottom-nav a[aria-current="page"] .bottom-nav-icon {
+    background: #35424a;
+    box-shadow: inset 0 0 0 1px #ffc68545;
+  }
+  .bottom-nav a:hover {
+    background: #25455e;
+  }
+  .bottom-nav a:focus-visible {
+    outline: 3px solid #ffc685;
+    outline-offset: -3px;
+  }
+}

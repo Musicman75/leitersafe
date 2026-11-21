@@ -15,7 +15,6 @@ import {
   LockKeyhole,
   TriangleAlert,
   X,
-  Menu,
   RotateCcw,
   Lightbulb,
   Flag,
@@ -37,11 +36,11 @@ import { getCheckState } from "./check";
 import "./style.css";
 type Page = "start" | "schulung" | "praxis" | "check" | "quiz" | "info";
 const navigation = [
-  { id: "start", label: "Startseite", icon: Home },
-  { id: "schulung", label: "Schulung", icon: BookOpen },
-  { id: "praxis", label: "Praxisübungen", icon: Footprints },
-  { id: "check", label: "Sicherheitscheck", icon: ClipboardCheck },
-  { id: "quiz", label: "Wissenstest", icon: GraduationCap },
+  { id: "start", label: "Startseite", shortLabel: "Start", icon: Home },
+  { id: "schulung", label: "Schulung", shortLabel: "Lernen", icon: BookOpen },
+  { id: "praxis", label: "Praxisübungen", shortLabel: "Praxis", icon: Footprints },
+  { id: "check", label: "Sicherheitscheck", shortLabel: "Check", icon: ClipboardCheck },
+  { id: "quiz", label: "Wissenstest", shortLabel: "Test", icon: GraduationCap },
 ] as const;
 function QuestionCard({
   q,
@@ -125,7 +124,6 @@ function App() {
   });
   const [progress, setProgress] = useState(readProgress);
   const [storageError, setStorageError] = useState(false);
-  const [mobile, setMobile] = useState(false);
   const [lesson, setLesson] = useState<number | null>(null);
   const [step, setStep] = useState(0);
   const [lessonAnswered, setLessonAnswered] = useState(false);
@@ -157,7 +155,6 @@ function App() {
   function go(p: Page) {
     setPage(p);
     location.hash = p;
-    setMobile(false);
     setLesson(null);
     setPractice(null);
     window.scrollTo(0, 0);
@@ -221,7 +218,7 @@ function App() {
       <a className="skip-link" href="#main">
         Zum Inhalt
       </a>
-      <aside className={mobile ? "sidebar open" : "sidebar"}>
+      <aside className="sidebar">
         <a className="brand" href="#start" onClick={() => go("start")}>
           <span className="brand-mark">
             <span />
@@ -267,24 +264,16 @@ function App() {
           </div>
         </div>
       </aside>
-      {mobile && (
-        <button
-          className="scrim"
-          aria-label="Menü schließen"
-          onClick={() => setMobile(false)}
-        />
-      )}
       <div className="app-shell">
         <header className="topbar">
-          <button
-            className="menu-button"
-            onClick={() => setMobile(!mobile)}
-            aria-label="Navigation öffnen"
-            aria-expanded={mobile}
-          >
-            <Menu />
-          </button>
+          <a className="mobile-brand" href="#start" onClick={() => go("start")} aria-label="LeiterSafe – Startseite">
+            Leiter<span>Safe</span>
+          </a>
           <span>Sicher arbeiten mit Leitern und Tritten</span>
+          <button className="mobile-info" aria-current={page === "info" ? "page" : undefined} onClick={() => go("info")}>
+            <Info size={20} aria-hidden="true" />
+            Quellen
+          </button>
           <div className="topbar-right">
             <span className="prototype">Lern-App</span>
             <span className="profile">
@@ -1048,6 +1037,22 @@ function App() {
           </footer>
         </main>
       </div>
+      <nav className="bottom-nav" aria-label="Hauptnavigation">
+        {navigation.map((n) => (
+          <a
+            key={n.id}
+            href={`#${n.id}`}
+            aria-current={page === n.id ? "page" : undefined}
+            onClick={(event) => {
+              event.preventDefault();
+              go(n.id);
+            }}
+          >
+            <span className="bottom-nav-icon"><n.icon size={26} aria-hidden="true" /></span>
+            <span>{n.shortLabel}</span>
+          </a>
+        ))}
+      </nav>
     </>
   );
 }
