@@ -47,7 +47,7 @@ const scenes = [
   {
     photo: 2,
     caption:
-      "Genau hinsehen: Leiterfüße und Verbindung zur unteren Stufe. Die Quizsituation beschreibt einen davon unabhängigen Fall.",
+      "Detailfoto zur Orientierung: Leiterfüße und untere Stufe. Beurteile den Zustand immer an der Leiter vor Ort.",
   },
   {
     photo: 0,

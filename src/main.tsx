@@ -781,7 +781,7 @@ function App() {
                         }}
                       />
                     </div>
-                    <LadderPhoto scene={checkAnswers.length < 3 ? 1 : 2} />
+                    <LadderPhoto scene={[4, 4, 1, 5, 4][checkAnswers.length]} />
                     <h2>{checkItems[checkAnswers.length][0]}</h2>
                     <p>{checkItems[checkAnswers.length][1]}</p>
                     <div className="answers">
