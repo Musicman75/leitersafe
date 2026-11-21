@@ -53,6 +53,17 @@ Die Vite-Konfiguration übernimmt `BASE_PATH`. Der Workflow setzt sie automatisc
 - Zehn Quizfragen mit sofortiger Erklärung und Ergebnisübersicht
 - Lokaler Lernfortschritt, Praxisabschlüsse und bestes Testergebnis; Rücksetzen mit Bestätigung
 - Quellen- und Informationsseite; echte Leiterfotografien, lokal ausgeliefert und mit Bildnachweisen
+- Unter Check → Leitertyp & Prüfstellen: Anlege-, Steh-, Schiebe- und Gelenkleiter mit eigenen schematischen Abbildungen und anklickbaren Bauteilbereichen
+
+## Leitertypen und interaktive Prüfstellen
+
+Direkteinstieg: `#pruefung`. Eine Bauart auswählen und einen Punkt im Bild oder einen Eintrag in der gleichwertigen Prüfliste anklicken. Die Erklärung nennt die zu kontrollierenden Bauteile. Jede Bauart hat sechs oder sieben Prüfstellen; typspezifisch etwa Spreizsicherung, Plattform, Haken, Führungen oder Gelenksperren. Die Darstellungen sind eigene SVG-Schemata und keine modellspezifischen Aufbauzeichnungen.
+
+„Keine Auffälligkeit“ führt zur nächsten offenen Prüfstelle. Problem oder Unsicherheit sperren die weitere positive Bewertung dieser Kontrolle und zeigen den Stopp-Hinweis. Ein Neustart erfordert eine Bestätigung. Kontrollstände je Bauart bleiben bei Bereichs- und Typwechseln innerhalb der laufenden App erhalten; beim Neuladen werden sie verworfen. Sie werden nicht als Einsatzfreigabe oder Prüfprotokoll gespeichert. Die Funktion unterstützt die Sichtkontrolle vor Verwendung und ersetzt keine wiederkehrende betriebliche Prüfung.
+
+Inhalte und Hotspot-Koordinaten: `src/inspection.ts`; Oberfläche und Schemata: `src/LadderInspection.tsx`. Fachquellen: DGUV Information 208-016, Abschnitte 5, 6 und 7, offizielle Wiedergabe bei der BG BAU; Links stehen direkt in der Funktion. Quellenabgleich am 21.11.2026.
+
+Automatisiert geprüft: Inhalte, eindeutige Punkte, überlappungsfreie 44-Pixel-Tippflächen bei 320 Pixel Bildschirmbreite und Stopp-Logik an jeder Prüfstelle. Browserprüfung in Chromium bei 320, 390, 768 und 1280 Pixel: alle Markierungen, vollständiger Ablauf, beide Stoppfälle, bestätigter/abgebrochener Neustart und Erhalt der Angaben beim Wechseln. Eine Prüfung auf einem physischen iPhone steht aus.
 
 ## Neue Inhalte ergänzen
 

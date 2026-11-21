@@ -70,6 +70,30 @@ test("Speicher lädt sicher bei ungültigen Daten oder blockiertem Browser", () 
   });
 });
 const { getCheckState } = await loadTS("../src/check.ts");
+const { ladderTypes, inspectionState } = await loadTS("../src/inspection.ts");
+test("Jede Leiterbauart hat eigene erreichbare Prüfstellen und vollständige Hinweise", () => {
+  assert.deepEqual(ladderTypes.map(t => t.id), ["anlege", "steh", "schiebe", "gelenk"]);
+  for (const type of ladderTypes) {
+    assert.equal(new Set(type.points.map(p => p.id)).size, type.points.length);
+    for (const p of type.points) {
+      assert.ok(p.title && p.checks.length >= 2);
+      assert.ok(p.x > 35 && p.x < 325 && p.y > 35 && p.y < 445);
+      for (const other of type.points.filter(q => q !== p)) {
+        // At the narrowest supported phone size, 44px touch targets must not overlap.
+        assert.ok(Math.hypot(p.x - other.x, p.y - other.y) * 246 / 360 >= 44);
+      }
+    }
+    assert.equal(inspectionState(type, {}), "offen");
+    const all = Object.fromEntries(type.points.map(p => [p.id, "ok"]));
+    assert.equal(inspectionState(type, all), "angesehen");
+    for (const p of type.points) {
+      assert.equal(inspectionState(type, { ...all, [p.id]: "problem" }), "stopp");
+      assert.equal(inspectionState(type, { ...all, [p.id]: "unsicher" }), "stopp");
+      const partial = { ...all }; delete partial[p.id];
+      assert.equal(inspectionState(type, partial), "offen");
+    }
+  }
+});
 test("Probleme und Unsicherheit stoppen den Check bei jeder Frage", () => {
   for (let index = 0; index < 5; index++)
     for (const answer of [1, 2])

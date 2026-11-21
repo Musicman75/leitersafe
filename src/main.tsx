@@ -33,8 +33,9 @@ import {
 import { LadderPhoto, PhotoCredits } from "./LadderPhoto";
 import { readProgress, emptyProgress } from "./progress";
 import { getCheckState } from "./check";
+import { LadderInspection } from "./LadderInspection";
 import "./style.css";
-type Page = "start" | "schulung" | "praxis" | "check" | "quiz" | "info";
+type Page = "start" | "schulung" | "praxis" | "check" | "pruefung" | "quiz" | "info";
 const navigation = [
   { id: "start", label: "Startseite", shortLabel: "Start", icon: Home },
   { id: "schulung", label: "Schulung", shortLabel: "Lernen", icon: BookOpen },
@@ -116,7 +117,7 @@ function QuestionCard({
 function App() {
   const [page, setPage] = useState<Page>(() => {
     const hash = location.hash.slice(1);
-    return ["start", "schulung", "praxis", "check", "quiz", "info"].includes(
+    return ["start", "schulung", "praxis", "check", "pruefung", "quiz", "info"].includes(
       hash,
     )
       ? (hash as Page)
@@ -157,7 +158,7 @@ function App() {
   useEffect(() => {
     const handler = () => {
       const h = location.hash.slice(1);
-      if (["start", "schulung", "praxis", "check", "quiz", "info"].includes(h))
+      if (["start", "schulung", "praxis", "check", "pruefung", "quiz", "info"].includes(h))
         setPage(h as Page);
     };
     window.addEventListener("hashchange", handler);
@@ -170,6 +171,7 @@ function App() {
     setPractice(null);
     window.scrollTo(0, 0);
   }
+  const isNavActive = (id: string) => page === id || (id === "check" && page === "pruefung");
   function openLesson(i: number) {
     setLesson(i);
     setStep(0);
@@ -246,13 +248,13 @@ function App() {
           {navigation.map((n) => (
             <button
               key={n.id}
-              className={page === n.id ? "active" : ""}
-              aria-current={page === n.id ? "page" : undefined}
+              className={isNavActive(n.id) ? "active" : ""}
+              aria-current={isNavActive(n.id) ? "page" : undefined}
               onClick={() => go(n.id)}
             >
               <n.icon size={20} />
               {n.label}
-              {page === n.id && <span className="nav-dot" />}
+              {isNavActive(n.id) && <span className="nav-dot" />}
             </button>
           ))}
         </nav>
@@ -705,21 +707,19 @@ function App() {
               )}
             </>
           )}
+          {(page === "check" || page === "pruefung") && (
+            <>
+              {title("LEITER KENNEN. SICHER HANDELN.", page === "pruefung" ? "Prüfstellen an deiner Leiter." : "Dein Sicherheitscheck.", "Wähle eine Bauart und entdecke ihre Prüfstellen oder durchlaufe den allgemeinen Sicherheitscheck.")}
+              <nav className="check-sections" aria-label="Bereiche der Leiterkontrolle">
+                <a href="#check" aria-current={page === "check" ? "page" : undefined} onClick={event => { event.preventDefault(); go("check"); }}>Sicherheitscheck</a>
+                <a href="#pruefung" aria-current={page === "pruefung" ? "page" : undefined} onClick={event => { event.preventDefault(); go("pruefung"); }}>Leitertyp & Prüfstellen</a>
+              </nav>
+              <div className="notice"><Info size={20} aria-hidden="true" /><p>Sichtkontrolle vor der Benutzung: Bei Schäden oder Unsicherheit zunächst nicht benutzen und fachkundig klären lassen. Keine Einsatzfreigabe und kein Ersatz für die wiederkehrende betriebliche Prüfung.</p></div>
+            </>
+          )}
+          <LadderInspection hidden={page !== "pruefung"} />
           {page === "check" && (
             <>
-              {title(
-                "VOR JEDER BENUTZUNG",
-                "Dein Sicherheitscheck.",
-                "Sieh genau hin. Bei einem Problem oder Zweifel gilt: zunächst nicht benutzen.",
-              )}
-              <div className="notice">
-                <Info size={20} />
-                <p>
-                  Orientierung für die Sichtkontrolle. Keine Einsatzfreigabe und
-                  kein Ersatz für vorgeschriebene Prüfungen, Herstelleranleitung
-                  oder betriebliche Vorgaben.
-                </p>
-              </div>
               <section className="panel check-panel" ref={checkPanelRef} aria-labelledby="check-heading">
                 {getCheckState(checkAnswers, checkItems.length) === "stop" ? (
                   <>
@@ -1059,7 +1059,7 @@ function App() {
           <a
             key={n.id}
             href={`#${n.id}`}
-            aria-current={page === n.id ? "page" : undefined}
+            aria-current={isNavActive(n.id) ? "page" : undefined}
             onClick={(event) => {
               event.preventDefault();
               go(n.id);
