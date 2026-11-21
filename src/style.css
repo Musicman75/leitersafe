@@ -2442,3 +2442,10 @@ footer button {
     font-size: 12px;
   }
 }
+/* Bound intrinsic image sizes inside grid/flex layouts. */
+.ladder-photo,.photo-stage{min-width:0;min-height:0}
+.photo-stage img{min-height:0;max-height:100%;max-width:100%}
+.hero .hero-photo{justify-content:center}
+.hero-photo .photo-stage{flex:0 0 340px;height:340px;min-height:0;max-height:340px}
+@media(max-width:900px) and (min-width:681px){.hero-photo .photo-stage{flex:0 0 290px;height:290px;max-height:290px;min-height:0}}
+@media(max-width:680px){.hero-photo .photo-stage{height:230px;max-height:230px;min-height:0;flex:none}}
